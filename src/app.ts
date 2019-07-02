@@ -1,5 +1,5 @@
 import * as bodyParser from 'koa-bodyparser';
-import { ControllerScan, Application } from '../index';
+import { ControllerScan, Application } from 'koa-springboot';
 
 
 @ControllerScan(__dirname, 'controller')

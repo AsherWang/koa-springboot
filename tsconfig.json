@@ -6,7 +6,7 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": false,
-    "declaration": true,
+    "declaration": false,
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
@@ -17,9 +17,7 @@
     }
   },
   "include": [
-    "lib/*",
-    "demo/**/*",
-    "index.ts"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules"

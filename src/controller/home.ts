@@ -1,7 +1,7 @@
 import {
   GetMapping, PostMapping, RequestMapping, RequestMethod,
   PathVariable, RequestParam, RequestBody
-} from '../../index';
+} from 'koa-springboot';
 
 @RequestMapping('/home')
 export default class Home {
