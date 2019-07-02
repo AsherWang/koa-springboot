@@ -1,0 +1,49 @@
+{
+  "name": "koa-springboot",
+  "version": "0.0.2",
+  "description": "springboot-like koa",
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "node dist/demo/app.js",
+    "build": "npm run tslint && npm run build-ts",
+    "build-ts": "tsc",
+    "watch": "npm run tslint && npm run watch-ts",
+    "watch-ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "build:r": "npm run build-ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AsherWang/koa-springboot.git"
+  },
+  "keywords": [
+    "koa",
+    "koa-router",
+    "typesctipt",
+    "decorator"
+  ],
+  "author": "Asher",
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^7.6.1",
+    "@commitlint/config-conventional": "^7.6.0",
+    "@types/koa": "^2.0.48",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-router": "^7.0.40",
+    "@types/node": "^12.0.10",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "husky": "^2.3.0",
+    "koa": "^2.6.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
