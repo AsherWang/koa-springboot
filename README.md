@@ -5,10 +5,9 @@ springboot-like koa
 - use decorator to build router
 - auto import controller
 
-## install
-`npm i koa koa-router koa-springboot -S`  
-detailed guide [here](https://github.com/AsherWang/koa-springboot/tree/master/guide.md)
----
+## install  
+`npm i koa koa-router koa-springboot -S`
+
 ## demo
 controller  
 ``` typescript
@@ -55,6 +54,4 @@ class App extends Application {
 
 new App().start();
 ```
-see it [here](https://github.com/AsherWang/koa-springboot/tree/master/demo)
----
-
+see full demo [here](https://github.com/AsherWang/koa-springboot/tree/demo)
