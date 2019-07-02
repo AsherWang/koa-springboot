@@ -1,11 +1,15 @@
-# koa-springboot
-springboot风格的koa项目`developing`
+## koa-springboot
+springboot-like koa
 
-# feature
-- 使用 `decorator` 构建路由
-- 自动引入controller
+## feature
+- use decorator to build router
+- auto import controller
 
-# demo
+## install
+`npm i koa koa-router koa-springboot -S`  
+detailed guide [here](https://github.com/AsherWang/koa-springboot/tree/master/guide.md)
+---
+## demo
 controller  
 ``` typescript
 // ...
@@ -42,7 +46,6 @@ class App extends Application {
   // override init method to do you own logic
   // or not
   protected init() {
-    console.log('so init myself');
     this.app
     .use(bodyParser())
     .use(this.router.routes())
@@ -52,14 +55,6 @@ class App extends Application {
 
 new App().start();
 ```
-[source files](https://github.com/AsherWang/koa-springboot/tree/master/demo)
+see it [here](https://github.com/AsherWang/koa-springboot/tree/master/demo)
 ---
-
-# koa-springboot
-springboot-like koa
-
-# feature
-- use decorator to build router
-- auto import controller
-
 

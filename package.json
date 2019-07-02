@@ -1,6 +1,6 @@
 {
   "name": "koa-springboot",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "springboot-like koa",
   "scripts": {
     "start": "npm run serve",
@@ -10,7 +10,7 @@
     "watch": "npm run tslint && npm run watch-ts",
     "watch-ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "build:r": "npm run build-ts"
+    "publish": "node ./publish.js"
   },
   "repository": {
     "type": "git",
