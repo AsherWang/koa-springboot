@@ -7,7 +7,7 @@ import {
 export default class Home {
 
   @GetMapping('/api/v1/:id')
-  index(@PathVariable('id') id: string, @RequestParam('name', true) name: string) {
+  index(@PathVariable('id') id: string, @RequestParam('name', true, 'defaultNameValue') name: string) {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(`time end! ${id}, ${name}`);
