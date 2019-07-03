@@ -1,10 +1,10 @@
 {
   "name": "koa-springboot",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "springboot-like koa",
   "scripts": {
     "start": "npm run serve",
-    "serve": "node dist/demo/app.js",
+    "serve": "node dist/demo/server.js",
     "build": "npm run tslint && npm run build-ts",
     "build-ts": "tsc",
     "watch": "npm run tslint && npm run watch-ts",

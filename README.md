@@ -4,6 +4,7 @@ springboot-like koa
 ## feature
 - use decorator to build router
 - auto import controller
+- validate required params
 
 ## install  
 `npm i koa koa-router koa-springboot -S`
@@ -55,3 +56,6 @@ class App extends Application {
 new App().start();
 ```
 see full demo [here](https://github.com/AsherWang/koa-springboot/tree/demo)
+
+### reference
+[docs of spring mvc](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-controller)

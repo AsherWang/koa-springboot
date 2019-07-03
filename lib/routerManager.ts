@@ -1,3 +1,5 @@
+import { ParamError } from './errors';
+
 export interface ParamConfig {
   name: string;
   index: number;
@@ -25,15 +27,34 @@ function prefixSlash(str: string): string {
 }
 
 // todo: required params may be checked here
-function getParams(actionParams: Array<any>, ctx: any): Array<any> {
+/**
+ * retrieve params value from ctx and validate values
+ * @param  {Array<ParamConfig>} actionParams config of how to retrieve values
+ * @param  {any} ctx main context of an requrest
+ * @returns Array, can be passed directly to action method
+ * @throw ParamError when required param
+ */
+function getParams(actionParams: Array<ParamConfig>, ctx: any): Array<any> {
   const ret: Array<any> = [];
   (actionParams || []).forEach(actionParam => {
+
+    // retrieve param value
     if (actionParam.type === 'PathVariable') {
       ret[actionParam.index] = ctx.params[actionParam.name];
     } else if (actionParam.type === 'RequestParam') {
       ret[actionParam.index] = ctx.query[actionParam.name];
     } else if (actionParam.type === 'RequestBody') {
-      ret[actionParam.index] = ctx.request.body;
+      ret[actionParam.index] = ctx.request.body || ctx.body;
+    }
+
+    // handle default value
+    if (actionParam.defaultValue !== undefined) {
+      ret[actionParam.index] = ret[actionParam.index] || actionParam.defaultValue;
+    }
+
+    // check required param
+    if (actionParam.required && ret[actionParam.index] === undefined) {
+      throw new ParamError(`param ${actionParam.name} is required`);
     }
   });
   ret.push(ctx);
@@ -42,7 +63,20 @@ function getParams(actionParams: Array<any>, ctx: any): Array<any> {
 
 function paramsMiddleWare(actionParams: Array<any>): any {
   return async (ctx: any, next: any) => {
-    ctx.actionParams = getParams(actionParams, ctx);
+    // try get params and validate
+    try {
+      ctx.actionParams = getParams(actionParams, ctx);
+    } catch (error) {
+      if (error instanceof ParamError) {
+        ctx.body = JSON.stringify({
+          code: error.code,
+          data: error.message
+        });
+        return;
+      } else {
+        throw error;
+      }
+    }
     const ret = await next();
     ctx.body = JSON.stringify({
       code: 200,

@@ -3,7 +3,7 @@ import { ControllerScan, Application } from '../index';
 
 
 @ControllerScan(__dirname, 'controller')
-class App extends Application {
+export default class App extends Application {
   // override init method to do you own logic
   // or not
   protected init() {
@@ -13,5 +13,3 @@ class App extends Application {
     .use(this.router.allowedMethods());
   }
 }
-
-new App().start();

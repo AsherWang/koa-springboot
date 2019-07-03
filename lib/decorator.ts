@@ -25,6 +25,7 @@ export function ControllerScan(...paths: Array<string>): any {
   };
 }
 
+// not as good as i expected
 export function KoaApplication<T extends {new(...args: any[]): {}}>(constructor: T): any {
   // return function (target: any, propertyKey: string) {
   //   Application.initParams.controllerPath = paths;
@@ -74,9 +75,17 @@ export function RequestMapping(value: string, method: string= RequestMethod.GET)
 export function GetMapping(value: string): any {
   return RequestMapping(value, RequestMethod.GET);
 }
-
 export function PostMapping(value: string): any {
   return RequestMapping(value, RequestMethod.POST);
+}
+export function PutMapping(value: string): any {
+  return RequestMapping(value, RequestMethod.PUT);
+}
+export function DeleteMapping(value: string): any {
+  return RequestMapping(value, RequestMethod.DELETE);
+}
+export function PatchMapping(value: string): any {
+  return RequestMapping(value, RequestMethod.PATCH);
 }
 
 function paramDecorator(type: string, value: string = '', required: boolean = false, defaultValue?: any): any {
