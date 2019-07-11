@@ -10,7 +10,9 @@
     "watch": "npm run tslint && npm run watch-ts",
     "watch-ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "publish": "node ./publish.js"
+    "publish": "node ./publish.js",
+    "build-test": "npm run build-ts && babel test.ts --out-file dist/test.js",
+    "test": "jest dist/test.js"
   },
   "repository": {
     "type": "git",
@@ -25,16 +27,23 @@
   "author": "Asher",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.0",
+    "@babel/preset-env": "^7.5.0",
+    "@babel/preset-typescript": "^7.3.3",
     "@commitlint/cli": "^7.6.1",
     "@commitlint/config-conventional": "^7.6.0",
+    "@types/jest": "^24.0.15",
     "@types/koa": "^2.0.48",
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-router": "^7.0.40",
     "@types/node": "^12.0.10",
     "husky": "^2.3.0",
+    "jest": "^24.8.0",
     "koa": "^2.6.2",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
+    "supertest": "^4.0.2",
     "tslint": "^5.17.0",
     "typescript": "^3.5.1"
   },

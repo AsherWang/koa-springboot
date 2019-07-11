@@ -54,10 +54,10 @@ class Application {
   /**
    * start running App
    * @param  {number} port optional, default is 3000
-   * @returns void
+   * @returns Koa app instance
    */
-  public start(port: number = 3000): void {
-    this.koaApp.listen(port, () => {
+  public start(port: number = 3000): any {
+    return this.koaApp.listen(port, () => {
       console.log(`Server is running at http://localhost:${port}`);
     });
   }

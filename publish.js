@@ -14,7 +14,7 @@ const packageObj = JSON.parse(packageStr);
 delete packageObj.scripts.publish;
 
 fs.writeFileSync(`${distDir}/package.json`, JSON.stringify(packageObj, null, 2));
-fs.writeFileSync(`${distDir}/.npmignore`,"demo");
+fs.writeFileSync(`${distDir}/.npmignore`,"demo\ntest.ts\ntest.d.ts");
 tool.runCMDSync('npm publish',{cwd:distDir});
 
 
