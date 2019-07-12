@@ -21,7 +21,7 @@
     "koa": "^2.6.2",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
-    "koa-springboot": "0.0.3"
+    "koa-springboot": "^0.1.1"
   },
   "devDependencies": {
     "@types/koa": "^2.0.48",
