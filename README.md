@@ -13,26 +13,40 @@ springboot-like koa
 controller  
 ``` typescript
 // ...
-@RequestMapping('/home')
-export default class Home {
+@RequestMapping('/persons')
+@ResponseBody
+export default class Person {
 
-  @GetMapping('/api/v1/:id')
-  index(@PathVariable('id') id: string, @RequestParam('name', true) name: string) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(`time end! ${id}, ${name}`);
-      }, 1000);
-    });
+  @GetMapping
+  index() {
+    return list;
   }
 
-  @RequestMapping('/api/v2', RequestMethod.GET)
-  index2() {
-    return 'api2';
+  @GetMapping('/:id')
+  show(@PathVariable('id') id: string) {
+    // ...
+    return record;
   }
 
-  @PostMapping('/api/v3')
-  index3(@RequestBody body: any) {
-    return body;
+  @PostMapping
+  create(@RequestBody body: any) {
+    // ...
+    return newRecord;
+  }
+
+  @PutMapping('/:id')
+  update(@PathVariable('id') id: string, @RequestBody body: any) {
+    // ...
+  }
+
+  @PatchMapping('/name/:id')
+  patch(@PathVariable('id') id: string, @RequestBody body: any) {
+    // ...
+  }
+
+  @DeleteMapping('/:id')
+  destory(@PathVariable('id') id: string) {
+    // ...
   }
 }
 

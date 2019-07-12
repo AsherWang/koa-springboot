@@ -34,36 +34,6 @@ export function Controller<T extends { new(...args: any[]): {} }>(constructor: T
   return constructor;
 }
 
-
-// function doRequestMapping(value: any, action?: string, sMethod?: string) {
-//   if(sMethod){
-
-//   } else {
-
-//   }
-//   let controller = target;
-//   // if action is undefined, then RequestMapping is used to decorate a class
-//   if (action) {
-//     controller = target.constructor;
-//     if (value) {
-//       const config: RouterConfig = {
-//         pattern: value,
-//         action,
-//       };
-//       if (method) {
-//         config.method = method;
-//       }
-//       routeManager.setRouteConfig(controller, config);
-//     }
-//   } else {
-//     routeManager.setControllerConfig(controller, {baseUrl: value});
-//   }
-//   return controller;
-// }
-
-
-
-
 function doRequestMapping(target: any, action: string, value: string, method: string) {
   let controller = target;
   // if action is undefined, then RequestMapping is used to decorate a class
@@ -94,24 +64,6 @@ export function RequestMapping(value: any, method?: string, rMethod?: string): a
   if (typeof value !== 'function' && typeof value !== 'object') {
     return function (target: any, action: string) {
       return doRequestMapping(target, action, value, method);
-      // let controller = target;
-      // // if action is undefined, then RequestMapping is used to decorate a class
-      // if (action) {
-      //   controller = target.constructor;
-      //   if (value) {
-      //     const config: RouterConfig = {
-      //       pattern: value,
-      //       action,
-      //     };
-      //     if (method) {
-      //       config.method = method;
-      //     }
-      //     routeManager.setRouteConfig(controller, config);
-      //   }
-      // } else {
-      //   routeManager.setControllerConfig(controller, { baseUrl: value });
-      // }
-      // return controller;
     };
   }
   // then call @RequestMapping without params or parentheses
@@ -120,12 +72,6 @@ export function RequestMapping(value: any, method?: string, rMethod?: string): a
   const action = method;
   return doRequestMapping(target, action, '/', rMethod);
 }
-
-
-
-// function decoratorWrapper(decorator:Function, value: any = '/', method?: string): any {
-
-// }
 
 // for XXXMapping except RequestMapping
 function mappingWrapper(value: any = '/', method?: string, rMethod?: string) {

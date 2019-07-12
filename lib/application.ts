@@ -27,7 +27,7 @@ class Application {
   private initScanner(): void {
     Scanner.controllerPath = this.controllerPath;
     this.scanner = new Scanner();
-    this.scanner.enableLog();
+    // this.scanner.enableLog();
     this.scanner.scan();
   }
 
@@ -62,9 +62,9 @@ class Application {
    * @param  {number} port optional, default is 3000
    * @returns Koa app instance
    */
-  public start(port: number = 3000): any {
+  public start(port: number = 3000, mute: boolean = false): any {
     return this.koaApp.listen(port, () => {
-      console.log(`Server is running at http://localhost:${port}`);
+      if (!mute)console.log(`Server is running at http://localhost:${port}`);
     });
   }
 }

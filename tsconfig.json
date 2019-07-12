@@ -19,7 +19,8 @@
   "include": [
     "lib/*",
     "demo/**/*",
-    "index.ts"
+    "index.ts",
+    "test.ts",
   ],
   "exclude": [
     "node_modules"

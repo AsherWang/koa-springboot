@@ -24,7 +24,7 @@ export default class Scanner {
     const controllerPath = path.join(...Scanner.controllerPath);
     if (fs.existsSync(controllerPath) && fs.statSync(controllerPath).isDirectory()) {
       fs.readdirSync(controllerPath)
-        .filter(subPath => subPath.endsWith('.js')) // ignore subDir
+        .filter(subPath => subPath.endsWith('.js')) // ignore subDir for now
         .forEach(subPath => {
           const absolutePath = path.join(controllerPath, subPath);
           if (this.debug) {

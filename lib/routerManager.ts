@@ -87,7 +87,7 @@ function paramsMiddleWare(actionParams: Array<any>, responseType: string): any {
       });
     } else {
       // render with template
-      await ctx.render('home/index');
+      await ctx.render('home/index', ret);
     }
 
   };
@@ -100,7 +100,7 @@ function mountSingleRoute(router: any, baseUrl: string, routerConfig: RouterConf
     path = path.replace(/\/$/, '');
   }
   const rResponseType = responseType || baseResponseType;
-  console.log(`route ${method.toUpperCase()} ${path} -> ${controllerInstance.constructor.name}#${action}:${rResponseType}`);
+  // console.log(`route ${method.toUpperCase()} ${path} -> ${controllerInstance.constructor.name}#${action}:${rResponseType}`);
   (<any>router)[method](
     path,
     paramsMiddleWare(actionParams, rResponseType),
