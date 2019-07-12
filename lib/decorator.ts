@@ -1,16 +1,7 @@
-import routeManager from './routerManager';
+import routeManager, { RouterConfig } from './routerManager';
 import Application from './application';
+import { RequestMethod } from './constants';
 
-export enum RequestMethod {
-  GET = 'get',
-  HEAD = 'head',
-  POST = 'post',
-  PUT = 'put',
-  PATCH = 'patch',
-  DELETE = 'delete',
-  OPTIONS = 'options',
-  TRACE = 'trace'
-}
 
 /**
  * setControllerScanPath, scanner will search all files in this dir.
@@ -26,7 +17,7 @@ export function ControllerScan(...paths: Array<string>): any {
 }
 
 // not as good as i expected
-export function KoaApplication<T extends {new(...args: any[]): {}}>(constructor: T): any {
+export function KoaApplication<T extends { new(...args: any[]): {} }>(constructor: T): any {
   // return function (target: any, propertyKey: string) {
   //   Application.initParams.controllerPath = paths;
   //   return target;
@@ -35,7 +26,7 @@ export function KoaApplication<T extends {new(...args: any[]): {}}>(constructor:
 }
 
 // useless for now
-export function Controller<T extends {new(...args: any[]): {}}>(constructor: T): any {
+export function Controller<T extends { new(...args: any[]): {} }>(constructor: T): any {
   // return class extends constructor {
   //   routers: Array<RouterConfig> = tRouters;
   //   baseUrl: string = tBaseUrl;
@@ -43,54 +34,148 @@ export function Controller<T extends {new(...args: any[]): {}}>(constructor: T):
   return constructor;
 }
 
+
+// function doRequestMapping(value: any, action?: string, sMethod?: string) {
+//   if(sMethod){
+
+//   } else {
+
+//   }
+//   let controller = target;
+//   // if action is undefined, then RequestMapping is used to decorate a class
+//   if (action) {
+//     controller = target.constructor;
+//     if (value) {
+//       const config: RouterConfig = {
+//         pattern: value,
+//         action,
+//       };
+//       if (method) {
+//         config.method = method;
+//       }
+//       routeManager.setRouteConfig(controller, config);
+//     }
+//   } else {
+//     routeManager.setControllerConfig(controller, {baseUrl: value});
+//   }
+//   return controller;
+// }
+
+
+
+
+function doRequestMapping(target: any, action: string, value: string, method: string) {
+  let controller = target;
+  // if action is undefined, then RequestMapping is used to decorate a class
+  if (action) {
+    controller = target.constructor;
+    if (value) {
+      const config: RouterConfig = {
+        pattern: value,
+        action,
+      };
+      if (method) {
+        config.method = method;
+      }
+      routeManager.setRouteConfig(controller, config);
+    }
+  } else {
+    routeManager.setControllerConfig(controller, { baseUrl: value });
+  }
+  return controller;
+}
+
 /**
  * @param  {string} value url pattern
  * @param  {string} method indacates 'method' when decorating an action,
  * and indacates 'baseUrl' when decorating a class
  */
-export function RequestMapping(value: string, method: string= RequestMethod.GET): any {
-  return function (target: any, propertyKey: string) {
-    let controller = target;
-    // if propertyKey is undefined, then RequestMapping is used to decorate a class
-    if (propertyKey) {
-      controller = target.constructor;
-      if (value) {
-        const config = {
-          controller,
-          method,
-          pattern: value,
-          action: propertyKey
-        };
-        routeManager.registerRouteConfig(controller, config);
-      } else {
-        console.warn('prop pattern is required when decorating a method with RequestMapping');
-      }
-    } else {
-      routeManager.registerBaseUrl(controller, value);
-    }
-    return controller;
-  };
+export function RequestMapping(value: any, method?: string, rMethod?: string): any {
+  if (typeof value !== 'function' && typeof value !== 'object') {
+    return function (target: any, action: string) {
+      return doRequestMapping(target, action, value, method);
+      // let controller = target;
+      // // if action is undefined, then RequestMapping is used to decorate a class
+      // if (action) {
+      //   controller = target.constructor;
+      //   if (value) {
+      //     const config: RouterConfig = {
+      //       pattern: value,
+      //       action,
+      //     };
+      //     if (method) {
+      //       config.method = method;
+      //     }
+      //     routeManager.setRouteConfig(controller, config);
+      //   }
+      // } else {
+      //   routeManager.setControllerConfig(controller, { baseUrl: value });
+      // }
+      // return controller;
+    };
+  }
+  // then call @RequestMapping without params or parentheses
+  // thus value -> target, method -> action
+  const target = value;
+  const action = method;
+  return doRequestMapping(target, action, '/', rMethod);
 }
 
-export function GetMapping(value: string): any {
-  return RequestMapping(value, RequestMethod.GET);
+
+
+// function decoratorWrapper(decorator:Function, value: any = '/', method?: string): any {
+
+// }
+
+// for XXXMapping except RequestMapping
+function mappingWrapper(value: any = '/', method?: string, rMethod?: string) {
+  if (typeof value !== 'object') {
+    return RequestMapping(value, rMethod);
+  } else {
+    return RequestMapping(value, method, rMethod);
+  }
 }
-export function PostMapping(value: string): any {
-  return RequestMapping(value, RequestMethod.POST);
+
+/**
+ * decorates a method.
+ * \@GetMapping is the same as \@GetMapping('/')
+ * @param  value path pattern
+ * @method just ignore this param
+ * @returns any
+ */
+export function GetMapping(value: any = '/', method?: string): any {
+  return mappingWrapper(value, method, RequestMethod.GET);
 }
-export function PutMapping(value: string): any {
-  return RequestMapping(value, RequestMethod.PUT);
+
+/**
+ * see GetMapping
+ */
+export function PostMapping(value: any = '/', method?: string): any {
+  return mappingWrapper(value, method, RequestMethod.POST);
 }
-export function DeleteMapping(value: string): any {
-  return RequestMapping(value, RequestMethod.DELETE);
+
+/**
+ * see GetMapping
+ */
+export function PutMapping(value: any = '/', method?: string): any {
+  return mappingWrapper(value, method, RequestMethod.PUT);
 }
-export function PatchMapping(value: string): any {
-  return RequestMapping(value, RequestMethod.PATCH);
+/**
+ * see GetMapping
+ */
+export function DeleteMapping(value: any = '/', method?: string): any {
+  return mappingWrapper(value, method, RequestMethod.DELETE);
+}
+/**
+ * see GetMapping
+ */
+export function PatchMapping(value: any = '/', method?: string): any {
+  return mappingWrapper(value, method, RequestMethod.PATCH);
 }
 
 function paramDecorator(type: string, value: string = '', required: boolean = false, defaultValue?: any): any {
-  return function(target: any, propertyKey: string | symbol, parameterIndex: number): any {
-    routeManager.registerParamVariable(target.constructor, propertyKey.toString(), {
+  return function (target: any, propertyKey: string | symbol, parameterIndex: number): any {
+    routeManager.setParamVariable(target.constructor, propertyKey.toString(), {
       name: value,
       index: parameterIndex,
       type,
@@ -105,6 +190,7 @@ export function PathVariable(name: string, required: boolean = false, defaultVal
 }
 
 /**
+ * decorate a parameter of a method.
  * @param  {string} name param name
  * @param  {boolean=false} required
  * @param  {any} defaultValue? provide a default value if not required
@@ -113,14 +199,36 @@ export function RequestParam(name: string, required: boolean = false, defaultVal
   return paramDecorator('RequestParam', name, required, defaultValue);
 }
 /**
+ * decorate a parameter of a method.
  * Maybe no use, just assign ctx.body to it
  */
 export function RequestBody(target: any, propertyKey: string | symbol, parameterIndex: number): any {
-  routeManager.registerParamVariable(target.constructor, propertyKey.toString(), {
+  routeManager.setParamVariable(target.constructor, propertyKey.toString(), {
     name: '',
     index: parameterIndex,
     type: 'RequestBody',
     required: false,
   });
 }
-// ... other methods
+
+/**
+ * indicates that the result should be a json.
+ * it can be used to decorate class or method.
+ * e.g. @ResponseBody
+ */
+export function ResponseBody(target: any, action?: string) {
+  let controller = target;
+  if (action) {
+    // method level
+    controller = target.constructor;
+    const config: RouterConfig = {
+      action,
+      responseType: 'json'
+    };
+    routeManager.setRouteConfig(controller, config);
+  } else {
+    // class level
+    routeManager.setControllerConfig(controller, { responseType: 'json' });
+    return controller;
+  }
+}

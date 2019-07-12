@@ -50,6 +50,12 @@ class Application {
       .use(this.router.routes())
       .use(this.router.allowedMethods());
   }
+  // /**
+  //  * define how to render html page
+  //  */
+  // protected render(view:string, ): void {
+
+  // }
 
   /**
    * start running App

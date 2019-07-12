@@ -1,4 +1,5 @@
 import { ParamError } from './errors';
+import { HttpStatus, RequestMethod } from './constants';
 
 export interface ParamConfig {
   name: string;
@@ -13,20 +14,20 @@ export interface RouterConfig {
   pattern?: string;    // e.g. /api/home
   action: string;     // controller's action method name
   actionParams?: Array<ParamConfig>; // control on how to pass args to action method
-  resultType?: string;
+  responseType?: string;
 }
 
 export interface ControllerConfig {
-  controller: Function;
+  controller?: Function;
   baseUrl?: string;
-  routes: Array<RouterConfig>;
+  routes?: Array<RouterConfig>;
+  responseType?: string;
 }
 
 function prefixSlash(str: string): string {
   return str.startsWith('/') ? str : `/${str}`;
 }
 
-// todo: required params may be checked here
 /**
  * retrieve params value from ctx and validate values
  * @param  {Array<ParamConfig>} actionParams config of how to retrieve values
@@ -61,7 +62,7 @@ function getParams(actionParams: Array<ParamConfig>, ctx: any): Array<any> {
   return ret;
 }
 
-function paramsMiddleWare(actionParams: Array<any>): any {
+function paramsMiddleWare(actionParams: Array<any>, responseType: string): any {
   return async (ctx: any, next: any) => {
     // try get params and validate
     try {
@@ -78,98 +79,106 @@ function paramsMiddleWare(actionParams: Array<any>): any {
       }
     }
     const ret = await next();
-    ctx.body = JSON.stringify({
-      code: 200,
-      data: ret
-    });
+    if (responseType === 'json') {
+      ctx.set('Content-Type', 'application/json');
+      ctx.body = JSON.stringify({
+        code: HttpStatus.OK,
+        data: ret
+      });
+    } else {
+      // render with template
+      await ctx.render('home/index');
+    }
+
   };
 }
 
-function mountSingleRoute(router: any, baseUrl: string, routerConfig: RouterConfig, controllerInstance: any) {
-  const { method, action, pattern, actionParams } = routerConfig;
+function mountSingleRoute(router: any, baseUrl: string, routerConfig: RouterConfig, controllerInstance: any, baseResponseType: string) {
+  const { method, action, pattern, actionParams, responseType } = routerConfig;
+  let path = baseUrl === '/' ? pattern : baseUrl + pattern;
+  if (path.length > 1) {
+    path = path.replace(/\/$/, '');
+  }
+  const rResponseType = responseType || baseResponseType;
+  console.log(`route ${method.toUpperCase()} ${path} -> ${controllerInstance.constructor.name}#${action}:${rResponseType}`);
   (<any>router)[method](
-    `${baseUrl}${pattern}`,
-    paramsMiddleWare(actionParams),
+    path,
+    paramsMiddleWare(actionParams, rResponseType),
     (ctx: any) => controllerInstance[action].call(controllerInstance, ...ctx.actionParams)
   );
 }
 
 class RouterManager {
+  // controller -> ControllerConfig
   private config: Map<Function, ControllerConfig>;
   constructor() {
     this.config = new Map();
   }
 
-  // todo: perf
-  public registerRouteConfig(controller: Function, routeConfig: RouterConfig): void {
-    routeConfig.pattern = prefixSlash(routeConfig.pattern);
-    let controllerConfig = this.config.get(controller);
-    if (controllerConfig) {
-      const existedIdx = controllerConfig.routes.findIndex(r => r.action === routeConfig.action);
-      if (existedIdx !== -1) {
-        controllerConfig.routes[existedIdx] = {
-          ...controllerConfig.routes[existedIdx],
-          ...routeConfig
-        };
-      } else {
-        controllerConfig.routes.push(routeConfig);
-      }
-    } else {
-      controllerConfig = {
+  public setRouteConfig(controller: Function, routeConfig: RouterConfig): void {
+    routeConfig.pattern = prefixSlash(routeConfig.pattern || '');
+    const preRouteConfig = this.getRouteConfig(controller, routeConfig.action);
+    Object.assign(preRouteConfig, routeConfig);
+  }
+
+  public setParamVariable(controller: Function, action: string, config: ParamConfig) {
+    const preRouteConfig = this.getRouteConfig(controller, action);
+    preRouteConfig.actionParams.push(config);
+  }
+
+
+  public setControllerConfig(controller: Function, config: ControllerConfig): void {
+    const controllerConfig = this.getControllerConfig(controller);
+    Object.assign(controllerConfig, config);
+  }
+
+  /**
+   * get config of a controller, if not exist, create one and return
+   * @param  {Function} controller
+   * @returns ControllerConfig
+   */
+  private getControllerConfig(controller: Function): ControllerConfig {
+    if (!this.config.has(controller)) {
+      const controllerConfig: ControllerConfig = {
         controller,
-        routes: [routeConfig]
+        baseUrl: '',
+        routes: [],
+        responseType: 'template'
       };
       this.config.set(controller, controllerConfig);
     }
+    return this.config.get(controller);
   }
 
-  // todo: perf
-  public registerParamVariable(controller: Function, action: string, config: ParamConfig) {
-    let controllerConfig = this.config.get(controller);
-    if (controllerConfig) {
-      controllerConfig.routes = controllerConfig.routes || [];
-      const routeConfig = controllerConfig.routes.find(r => r.action === action);
-      if (routeConfig) {
-        routeConfig.actionParams = routeConfig.actionParams || [];
-        routeConfig.actionParams.push(config);
-      } else {
-        controllerConfig.routes.push({
-          action: action,
-          actionParams: [config]
-        });
-      }
-    } else {
-      controllerConfig = {
-        controller,
-        routes: [{
-          action: action,
-          actionParams: [config]
-        }]
+  /**
+   * get a route config of a controller config, if not exist, create one and return
+   * @param  {Function} controller
+   * @returns ControllerConfig
+   */
+  private getRouteConfig(controller: Function, action: string): RouterConfig {
+    const controllerConfig = this.getControllerConfig(controller);
+    let ret: RouterConfig = controllerConfig.routes.find(r => r.action === action);
+    if (!ret) {
+      ret = {
+        method: RequestMethod.ALL,
+        action,
+        actionParams: []
       };
-      this.config.set(controller, controllerConfig);
+      controllerConfig.routes.push(ret);
     }
+    return ret;
   }
 
-  public registerBaseUrl(controller: Function, baseUrl: string): void {
-    const sBaseUrl = prefixSlash(baseUrl);
-    let controllerConfig = this.config.get(controller);
-    if (controllerConfig) {
-      controllerConfig.baseUrl = sBaseUrl;
-    } else {
-      controllerConfig = {
-        controller,
-        baseUrl: sBaseUrl,
-        routes: []
-      };
-      this.config.set(controller, controllerConfig);
-    }
-  }
-
+  /**
+   * mountRoutes
+   * @param  {any} router
+   * @returns void
+   */
   public mountRoutes(router: any): void {
-    this.config.forEach(({ baseUrl, controller, routes }) => {
+    this.config.forEach(({ baseUrl, controller, routes, responseType }) => {
       // todo: perf, need a better way to get a instance of a controller
       const cInstance = new (<any>controller)();
-      routes.forEach(routerConfig => mountSingleRoute(router, baseUrl, routerConfig, cInstance));
+      routes.forEach(routerConfig => mountSingleRoute(router, baseUrl, routerConfig, cInstance, responseType));
     });
   }
 }
