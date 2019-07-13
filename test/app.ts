@@ -1,6 +1,6 @@
 import * as bodyParser from 'koa-bodyparser';
 import * as views from 'koa-views';
-import { ControllerScan, Application } from '../index';
+import { ControllerScan, Application } from '../dist';
 
 
 @ControllerScan(__dirname, 'controller')

@@ -3,16 +3,12 @@
   "version": "0.1.0",
   "description": "springboot-like koa",
   "scripts": {
-    "start": "npm run serve",
-    "serve": "node dist/demo/server.js",
-    "build": "npm run tslint && npm run build-ts",
-    "build-ts": "tsc",
-    "watch": "npm run tslint && npm run watch-ts",
-    "watch-ts": "tsc -w",
+    "dev": "node testDist/server.js",
+    "build": "npm run tslint && tsc --build tsconfig.json",
+    "watch": "npm run tslint && tsc --build tsconfig.json -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "publish": "node ./publish.js",
-    "build-test": "npm run build-ts",
-    "test": "jest dist/test.js"
+    "test": "jest testDist/test.js"
   },
   "repository": {
     "type": "git",

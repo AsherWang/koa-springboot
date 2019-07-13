@@ -1,9 +1,10 @@
 import {
   GetMapping, PostMapping, RequestMapping, PatchMapping,
   PathVariable, RequestBody, ResponseBody, PutMapping, DeleteMapping
-} from '../../index';
+} from '../../dist';
 
 // rest api
+
 
 const dataSource = [
   {id: 1, name: 'asher'},

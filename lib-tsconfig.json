@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
+    "composite": true,
     "module": "commonjs",
     "target": "es2015",
     "experimentalDecorators": true,
-    "removeComments": true,
+    "removeComments":true,
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": false,
-    "declaration": false,
-    "outDir": "./testDist",
+    "declaration": true,
+    "outDir": "dist",
     "baseUrl": ".",
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
+    "types" : ["node", "koa", "koa-router"],
     "paths": {
       "*": [
         "node_modules/*",
@@ -21,12 +20,11 @@
     }
   },
   "include": [
-    "./test/**/*"
+    "index.ts",
+    "lib/*"
   ],
   "exclude": [
-    "node_modules"
-  ],
-  "references": [
-    {"path": "./lib-tsconfig.json"}
+    "node_modules",
+    "test"
   ]
 }

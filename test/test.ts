@@ -1,5 +1,5 @@
 import * as request from 'supertest';
-import App from './demo/app';
+import App from './app';
 
 let server: any, agent: any;
 

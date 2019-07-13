@@ -1,4 +1,4 @@
-import { GetMapping } from '../../index';
+import { GetMapping } from '../../dist';
 
 export default class Home {
   @GetMapping
