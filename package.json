@@ -3,13 +3,8 @@
   "version": "0.0.4",
   "description": "springboot-like koa",
   "scripts": {
-    "start": "npm run serve",
-    "serve": "node dist/app.js",
-    "build": "npm run build-ts",
-    "build-ts": "tsc",
-    "watch": "npm run watch-ts",
-    "watch-ts": "tsc -w",
-    "publish": "node ./publish.js"
+    "start": "gulp",
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
@@ -28,6 +23,10 @@
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-router": "^7.0.40",
     "@types/node": "^12.0.10",
+    "gulp": "^4.0.2",
+    "gulp-nodemon": "^2.4.2",
+    "gulp-typescript": "^5.0.1",
+    "rimraf": "^2.6.3",
     "typescript": "^3.5.1"
   }
 }
