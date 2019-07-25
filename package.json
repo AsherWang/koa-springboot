@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "description": "springboot-like koa",
   "scripts": {
-    "dev": "node testDist/server.js",
-    "build": "npm run tslint && tsc -b",
-    "watch": "npm run tslint && tsc -b -w",
+    "dev": "gulp",
+    "build": "gulp build",
+    "build-ts": "npm run tslint && tsc -b",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "publish": "node ./publish.js",
     "test": "jest testDist/test.js"
