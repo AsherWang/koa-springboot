@@ -1,6 +1,6 @@
 import routeManager, { RouterConfig } from './routerManager';
 import Application from './application';
-import { RequestMethod } from './constants';
+import { RequestMethod, HttpStatus } from './constants';
 
 
 /**
@@ -177,4 +177,19 @@ export function ResponseBody(target: any, action?: string) {
     routeManager.setControllerConfig(controller, { responseType: 'json' });
     return controller;
   }
+}
+
+/**
+ * indicates the result HttpStatus
+ * it can be used to method.
+ * e.g. @ResponseStatus(HttpStatus.CREATED)
+ */
+export function ResponseStatus(responseStatus: HttpStatus) {
+  return function(target: any, action: string) {
+    const config: RouterConfig = {
+      action,
+      responseStatus,
+    };
+    routeManager.setRouteConfig(target.constructor, config);
+  };
 }

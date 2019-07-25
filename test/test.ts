@@ -31,7 +31,7 @@ test('test GET /persons', async () => {
     .expect(200)
     .expect('Content-Type', /json/)
     .then(function(response: any) {
-      expect(response.body.data).toMatchObject(dataSource);
+      expect(response.body).toMatchObject(dataSource);
     });
 });
 
@@ -42,6 +42,30 @@ test('test GET /persons/1', async () => {
     .expect('Content-Type', /json/)
     .then(function(response: any) {
       const targetData = dataSource.find(item => item.id === 1);
-      expect(response.body.data).toMatchObject(targetData);
+      expect(response.body).toMatchObject(targetData);
+    });
+});
+
+test('test POST /persons', async () => {
+  const newName = 'new guy';
+  await agent.post('/persons')
+    .send(`name=${newName}`)
+    .set('Accept', 'application/json')
+    .expect(201)
+    .expect('Content-Type', /json/)
+    .then(function(response: any) {
+      expect(response.body.name).toBe(newName);
+    });
+});
+
+test('test PATCH /persons/1', async () => {
+  const newName = 'new guy';
+  await agent.post('/persons')
+    .send(`name=${newName}`)
+    .set('Accept', 'application/json')
+    .expect(201)
+    .expect('Content-Type', /json/)
+    .then(function(response: any) {
+      expect(response.body.name).toBe(newName);
     });
 });

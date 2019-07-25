@@ -1,6 +1,7 @@
 import {
   GetMapping, PostMapping, RequestMapping, PatchMapping,
-  PathVariable, RequestBody, ResponseBody, PutMapping, DeleteMapping
+  PathVariable, RequestBody, ResponseBody, PutMapping, DeleteMapping,
+  ResponseStatus, HttpStatus
 } from '../../dist';
 
 // rest api
@@ -31,6 +32,7 @@ export default class Person {
   }
 
   @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
   create(@RequestBody body: any) {
     const id = Math.max(...dataSource.map(item => item.id)) + 1;
     const newRecord = {
@@ -43,16 +45,16 @@ export default class Person {
 
   @PutMapping('/:id')
   update(@PathVariable('id') id: string, @RequestBody body: any) {
-    const item = dataSource.find(item => item.id.toString() === id);
-    if (item) {
-      Object.assign(item, body);
+    const itemIdx = dataSource.findIndex(item => item.id.toString() === id);
+    if (itemIdx !== -1) {
+      dataSource[itemIdx] = body;
     }
   }
 
-  @PatchMapping('/name/:id')
+  @PatchMapping('/:id')
   patch(@PathVariable('id') id: string, @RequestBody body: any) {
     const item = dataSource.find(item => item.id.toString() === id);
-    item.name = body.name;
+    Object.assign(item, body);
   }
 
   @DeleteMapping('/:id')

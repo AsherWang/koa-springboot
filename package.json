@@ -1,6 +1,6 @@
 {
   "name": "koa-springboot",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "springboot-like koa",
   "scripts": {
     "dev": "gulp",

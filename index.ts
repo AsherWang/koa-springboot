@@ -1,5 +1,9 @@
 import { RequestMethod, HttpStatus } from './lib/constants';
-import { GetMapping, PostMapping, PatchMapping, PutMapping, DeleteMapping, RequestMapping, PathVariable, RequestParam, RequestBody, ResponseBody, ControllerScan } from './lib/decorator';
+import {
+  GetMapping, PostMapping, PatchMapping, PutMapping, DeleteMapping, RequestMapping,
+  PathVariable, RequestParam, RequestBody, ResponseBody, ControllerScan,
+  ResponseStatus
+} from './lib/decorator';
 import Application from './lib/application';
 
 
@@ -17,5 +21,6 @@ export {
   PathVariable,
   RequestParam,
   RequestBody,
-  ResponseBody
+  ResponseBody,
+  ResponseStatus
 };

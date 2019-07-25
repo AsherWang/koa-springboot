@@ -15,6 +15,7 @@ export interface RouterConfig {
   action: string;     // controller's action method name
   actionParams?: Array<ParamConfig>; // control on how to pass args to action method
   responseType?: string;
+  responseStatus?: HttpStatus;
 }
 
 export interface ControllerConfig {
@@ -62,7 +63,7 @@ function getParams(actionParams: Array<ParamConfig>, ctx: any): Array<any> {
   return ret;
 }
 
-function paramsMiddleWare(actionParams: Array<any>, responseType: string): any {
+function paramsMiddleWare(actionParams: Array<any>, responseType: string, responseStatus: HttpStatus): any {
   return async (ctx: any, next: any) => {
     // try get params and validate
     try {
@@ -79,12 +80,10 @@ function paramsMiddleWare(actionParams: Array<any>, responseType: string): any {
       }
     }
     const ret = await next();
+    ctx.status = responseStatus;
     if (responseType === 'json') {
       ctx.set('Content-Type', 'application/json');
-      ctx.body = JSON.stringify({
-        code: HttpStatus.OK,
-        data: ret
-      });
+      ctx.body = JSON.stringify(ret);
     } else {
       // render with template
       await ctx.render('home/index', ret);
@@ -94,7 +93,7 @@ function paramsMiddleWare(actionParams: Array<any>, responseType: string): any {
 }
 
 function mountSingleRoute(router: any, baseUrl: string, routerConfig: RouterConfig, controllerInstance: any, baseResponseType: string) {
-  const { method, action, pattern, actionParams, responseType } = routerConfig;
+  const { method, action, pattern, actionParams, responseType, responseStatus } = routerConfig;
   let path = baseUrl === '/' ? pattern : baseUrl + pattern;
   if (path.length > 1) {
     path = path.replace(/\/$/, '');
@@ -103,7 +102,7 @@ function mountSingleRoute(router: any, baseUrl: string, routerConfig: RouterConf
   // console.log(`route ${method.toUpperCase()} ${path} -> ${controllerInstance.constructor.name}#${action}:${rResponseType}`);
   (<any>router)[method](
     path,
-    paramsMiddleWare(actionParams, rResponseType),
+    paramsMiddleWare(actionParams, rResponseType, responseStatus || HttpStatus.OK),
     (ctx: any) => controllerInstance[action].call(controllerInstance, ...ctx.actionParams)
   );
 }
