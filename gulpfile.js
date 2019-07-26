@@ -18,6 +18,9 @@ function tsLibCompile() {
 function cleanTsController(cb){
     rimraf('testDist/controller', cb);
 }
+function cleanTsModel(cb){
+    rimraf('testDist/model', cb);
+}
 function cleanTemplate(cb){
     rimraf('testDist/view', cb);
 }
@@ -51,6 +54,7 @@ exports.default = function () {
     // koa-springboot will scan controller directory
     // so we need to make sure dist/controller has no other files should be deleted
     watch('test/controller/*.ts', { events: 'unlink' }, cleanTsController);
+    watch('test/model/*.ts', { events: 'unlink' }, cleanTsModel);
     watch(['test/**/*.ts'], tsCompile);
     watch(['lib/**/*.ts'], tsLibCompile);
     watch(['test/view/**/*'], series(cleanTemplate, cpTemplate));

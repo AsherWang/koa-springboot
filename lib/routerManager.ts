@@ -22,6 +22,7 @@ export interface ControllerConfig {
   controller?: Function;
   baseUrl?: string;
   routes?: Array<RouterConfig>;
+  injectModels?: Map<string, string>; // property name -> model name
   responseType?: string;
 }
 
@@ -125,6 +126,11 @@ class RouterManager {
     preRouteConfig.actionParams.push(config);
   }
 
+  public setInjectModel(controller: Function, name: string, propertyKey: string) {
+    const preRouteConfig = this.getControllerConfig(controller);
+    preRouteConfig.injectModels = preRouteConfig.injectModels || new Map();
+    preRouteConfig.injectModels.set(propertyKey, name);
+  }
 
   public setControllerConfig(controller: Function, config: ControllerConfig): void {
     const controllerConfig = this.getControllerConfig(controller);
@@ -173,10 +179,16 @@ class RouterManager {
    * @param  {any} router
    * @returns void
    */
-  public mountRoutes(router: any): void {
-    this.config.forEach(({ baseUrl, controller, routes, responseType }) => {
+  public mountRoutes(router: any, models: any = {}): void {
+    this.config.forEach(({ baseUrl, controller, routes, responseType, injectModels }) => {
       // todo: perf, need a better way to get a instance of a controller
       const cInstance = new (<any>controller)();
+      if (injectModels && injectModels.size > 0) {
+        injectModels.forEach((propName, modelName) => {
+          cInstance[propName] = models[modelName];
+          // console.log(`controller.name#${propName} -> ${modelName}`, models[modelName], models);
+        });
+      }
       routes.forEach(routerConfig => mountSingleRoute(router, baseUrl, routerConfig, cInstance, responseType));
     });
   }

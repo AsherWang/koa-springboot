@@ -3,19 +3,7 @@ import {
   PathVariable, RequestBody, ResponseBody, PutMapping, DeleteMapping,
   ResponseStatus, HttpStatus
 } from '../../dist';
-
-// rest api
-
-
-const dataSource = [
-  {id: 1, name: 'asher'},
-  {id: 2, name: 'soul'},
-  {id: 3, name: 'writer'},
-  {id: 4, name: 'john'},
-  {id: 5, name: 'asherly'},
-  {id: 6, name: 'susan'},
-  {id: 7, name: 'leo'},
-];
+import PersonModel from '../model/person';
 
 @RequestMapping('/persons')
 @ResponseBody
@@ -23,46 +11,31 @@ export default class Person {
 
   @GetMapping
   index() {
-    return dataSource;
+    return PersonModel.findAll();
   }
 
   @GetMapping('/:id')
   show(@PathVariable('id') id: string) {
-    return dataSource.find(item => item.id.toString() === id);
+    return PersonModel.findByPk(id);
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   create(@RequestBody body: any) {
-    const id = Math.max(...dataSource.map(item => item.id)) + 1;
-    const newRecord = {
-      id,
-      name: body.name
-    };
-    dataSource.push(newRecord);
-    return newRecord;
+    return PersonModel.create(body);
   }
 
   @PutMapping('/:id')
   update(@PathVariable('id') id: string, @RequestBody body: any) {
-    const itemIdx = dataSource.findIndex(item => item.id.toString() === id);
-    if (itemIdx !== -1) {
-      dataSource[itemIdx] = body;
-    }
-  }
-
-  @PatchMapping('/:id')
-  patch(@PathVariable('id') id: string, @RequestBody body: any) {
-    const item = dataSource.find(item => item.id.toString() === id);
-    Object.assign(item, body);
+    return PersonModel.findByPk(id)
+      .then(item => item.update(body));
   }
 
   @DeleteMapping('/:id')
+  @ResponseStatus(HttpStatus.OK)
   destory(@PathVariable('id') id: string) {
-    const idx = dataSource.findIndex(item => item.id.toString() === id);
-    if (idx !== -1) {
-      dataSource.splice(idx, 1);
-    }
+    return PersonModel.findByPk(id)
+      .then(item => item.destroy());
   }
 
 }

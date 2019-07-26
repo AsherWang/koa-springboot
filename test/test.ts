@@ -1,5 +1,6 @@
 import * as request from 'supertest';
 import App from './app';
+import { reset } from './dbTool';
 
 let server: any, agent: any;
 
@@ -7,31 +8,20 @@ beforeAll((done) => {
   const app = new App();
   server = server || app.start(4000, true);
   agent = request.agent(server, {});
-  done();
+  reset().then(done);
 });
 
 afterAll((done) => {
-  return server && server.close(done);
+  reset().then(() => server.close(done));
 });
-
-const dataSource = [
-  {id: 1, name: 'asher'},
-  {id: 2, name: 'soul'},
-  {id: 3, name: 'writer'},
-  {id: 4, name: 'john'},
-  {id: 5, name: 'asherly'},
-  {id: 6, name: 'susan'},
-  {id: 7, name: 'leo'},
-];
-
 
 test('test GET /persons', async () => {
   await agent.get('/persons')
     .set('Accept', 'application/json')
     .expect(200)
     .expect('Content-Type', /json/)
-    .then(function(response: any) {
-      expect(response.body).toMatchObject(dataSource);
+    .then(function (response: any) {
+      expect(response.body.length).toEqual(7);
     });
 });
 
@@ -41,8 +31,7 @@ test('test GET /persons/1', async () => {
     .expect(200)
     .expect('Content-Type', /json/)
     .then(function(response: any) {
-      const targetData = dataSource.find(item => item.id === 1);
-      expect(response.body).toMatchObject(targetData);
+      expect(response.body.id).toEqual(1);
     });
 });
 
@@ -58,14 +47,25 @@ test('test POST /persons', async () => {
     });
 });
 
-test('test PATCH /persons/1', async () => {
+test('test PUT /persons/1', async () => {
   const newName = 'new guy';
-  await agent.post('/persons')
+  await agent.put('/persons/1')
     .send(`name=${newName}`)
     .set('Accept', 'application/json')
-    .expect(201)
+    .expect(200)
     .expect('Content-Type', /json/)
     .then(function(response: any) {
       expect(response.body.name).toBe(newName);
+    });
+});
+
+test('test DESTROY /persons/1', async () => {
+  const newName = 'new guy';
+  await agent.delete('/persons/1')
+    .set('Accept', 'application/json')
+    .expect(200)
+    .expect('Content-Type', /json/)
+    .then(function(response: any) {
+      expect(response.body.id).toBe(1);
     });
 });

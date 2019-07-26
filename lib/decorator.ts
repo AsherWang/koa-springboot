@@ -15,6 +15,18 @@ export function ControllerScan(...paths: Array<string>): any {
     return target;
   };
 }
+/**
+ * setModelScanPath, scanner will search all files in this dir.
+ * only support one dir for now
+ * @param  {Array<string>} ...paths, \`${dirname}/model\` or (dirname,'model')
+ * @returns any
+ */
+export function ModelScan(...paths: Array<string>): any {
+  return function (target: any, propertyKey: string) {
+    Application.initParams.modelPath = paths;
+    return target;
+  };
+}
 
 // not as good as i expected
 export function KoaApplication<T extends { new(...args: any[]): {} }>(constructor: T): any {
@@ -191,5 +203,11 @@ export function ResponseStatus(responseStatus: HttpStatus) {
       responseStatus,
     };
     routeManager.setRouteConfig(target.constructor, config);
+  };
+}
+
+export function Model(name: string): any {
+  return function(target: any, propertyKey: string) {
+    routeManager.setInjectModel(target.constructor, propertyKey, name);
   };
 }

@@ -1,7 +1,7 @@
 import * as bodyParser from 'koa-bodyparser';
 import * as views from 'koa-views';
-import { ControllerScan, Application } from '../dist';
-
+import { Sequelize } from 'sequelize';
+import { ControllerScan, ModelScan, Application } from '../dist';
 
 @ControllerScan(__dirname, 'controller')
 export default class App extends Application {
@@ -13,9 +13,9 @@ export default class App extends Application {
 
     // init router
     this.app
-    .use(bodyParser())
-    .use(this.router.routes())
-    .use(this.router.allowedMethods());
+      .use(bodyParser())
+      .use(this.router.routes())
+      .use(this.router.allowedMethods());
   }
 
 }
