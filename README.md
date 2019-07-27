@@ -1,7 +1,10 @@
 ## koa-springboot
-[![npm version](https://badge.fury.io/js/koa-springboot.svg)](https://badge.fury.io/js/koa-springboot) 
-
-springboot-like koa
+[![npm version](https://badgen.net/npm/v/koa-springboot)](https://badge.fury.io/js/koa-springboot)
+[![node version](https://badgen.net/npm/node/koa-springboot)](https://badge.fury.io/js/koa-springboot)
+![last commit](https://badgen.net/github/last-commit/AsherWang/koa-springboot)
+![travis](https://badgen.net/travis/AsherWang/koa-springboot?icon=travis)
+![publish size](https://badgen.net/packagephobia/publish/koa-springboot)
+![license](https://badgen.net/npm/license/koa-springboot)
 
 ## feature
 - use decorator to build router
