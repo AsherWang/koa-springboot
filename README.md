@@ -1,6 +1,6 @@
 ## koa-springboot
-[![npm version](https://badgen.net/npm/v/koa-springboot)](https://badge.fury.io/js/koa-springboot)
-[![node version](https://badgen.net/npm/node/koa-springboot)](https://badge.fury.io/js/koa-springboot)
+[![npm version](https://badgen.net/npm/v/koa-springboot)](https://www.npmjs.com/package/koa-springboot)
+![node version](https://badgen.net/npm/node/koa-springboot)
 ![last commit](https://badgen.net/github/last-commit/AsherWang/koa-springboot)
 ![travis](https://badgen.net/travis/AsherWang/koa-springboot?icon=travis)
 ![publish size](https://badgen.net/packagephobia/publish/koa-springboot)
