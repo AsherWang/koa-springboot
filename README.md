@@ -1,4 +1,6 @@
 ## koa-springboot
+[![npm version](https://badge.fury.io/js/koa-springboot.svg)](https://badge.fury.io/js/koa-springboot) 
+
 springboot-like koa
 
 ## feature
