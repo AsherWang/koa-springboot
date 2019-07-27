@@ -1,5 +1,5 @@
 ## koa-springboot
-[![npm version](https://badge.fury.io/js/koa-springboot.svg)](https://badge.fury.io/js/koa-springboot)
+[![npm version](https://badge.fury.io/js/koa-springboot.svg)](https://www.npmjs.com/package/koa-springboot)
 ![last commit](https://badgen.net/github/last-commit/AsherWang/koa-springboot)
 [![travis](https://badgen.net/travis/AsherWang/koa-springboot?icon=travis)](https://travis-ci.org/AsherWang/koa-springboot)
 ![publish size](https://badgen.net/packagephobia/publish/koa-springboot)
