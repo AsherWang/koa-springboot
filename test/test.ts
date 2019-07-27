@@ -8,11 +8,11 @@ beforeAll((done) => {
   const app = new App();
   server = server || app.start(4000, true);
   agent = request.agent(server, {});
-  reset().then(done);
+  reset().then(() => done());
 });
 
 afterAll((done) => {
-  reset().then(() => server.close(done));
+  server.close(() => done());
 });
 
 test('test GET /persons', async () => {
