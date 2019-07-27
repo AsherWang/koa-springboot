@@ -7,4 +7,10 @@ export default class Home {
       pageTitle: 'hi there, thx 4 trying'
     };
   }
+  @GetMapping('/index2')
+  index2() {
+    return {
+      pageTitle: 'now here is template page 2'
+    };
+  }
 }

@@ -64,7 +64,7 @@ function getParams(actionParams: Array<ParamConfig>, ctx: any): Array<any> {
   return ret;
 }
 
-function paramsMiddleWare(actionParams: Array<any>, responseType: string, responseStatus: HttpStatus): any {
+function paramsMiddleWare(actionParams: Array<ParamConfig>, responseType: string, responseStatus: HttpStatus, viewPath?:string): any {
   return async (ctx: any, next: any) => {
     // try get params and validate
     try {
@@ -87,7 +87,7 @@ function paramsMiddleWare(actionParams: Array<any>, responseType: string, respon
       ctx.body = JSON.stringify(ret);
     } else {
       // render with template
-      await ctx.render('home/index', ret);
+      await ctx.render(viewPath, ret);
     }
 
   };
@@ -100,10 +100,11 @@ function mountSingleRoute(router: any, baseUrl: string, routerConfig: RouterConf
     path = path.replace(/\/$/, '');
   }
   const rResponseType = responseType || baseResponseType;
+  const viewPath = `${controllerInstance.constructor.name.toLowerCase()}/${action}`;
   // console.log(`route ${method.toUpperCase()} ${path} -> ${controllerInstance.constructor.name}#${action}:${rResponseType}`);
   (<any>router)[method](
     path,
-    paramsMiddleWare(actionParams, rResponseType, responseStatus || HttpStatus.OK),
+    paramsMiddleWare(actionParams, rResponseType, responseStatus || HttpStatus.OK,  viewPath),
     (ctx: any) => controllerInstance[action].call(controllerInstance, ...ctx.actionParams)
   );
 }
@@ -126,6 +127,7 @@ class RouterManager {
     preRouteConfig.actionParams.push(config);
   }
 
+  // no use for now
   public setInjectModel(controller: Function, name: string, propertyKey: string) {
     const preRouteConfig = this.getControllerConfig(controller);
     preRouteConfig.injectModels = preRouteConfig.injectModels || new Map();
