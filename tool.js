@@ -27,7 +27,7 @@ const runCMDSync = (cmd, options) => {
   options = {
     ...defaultOpt,
     ...options
-  }
+  };
   // fix some strange bug in win10
   // https://github.com/SBoudrias/Inquirer.js/issues/792
   const rl = readline.createInterface({

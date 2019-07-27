@@ -1,7 +1,6 @@
 import * as bodyParser from 'koa-bodyparser';
 import * as views from 'koa-views';
-import { Sequelize } from 'sequelize';
-import { ControllerScan, ModelScan, Application } from '../dist';
+import { ControllerScan, Application } from '../dist';
 
 @ControllerScan(__dirname, 'controller')
 export default class App extends Application {

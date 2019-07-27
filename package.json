@@ -6,8 +6,8 @@
     "start": "node testDist/server.js",
     "dev": "gulp",
     "build": "gulp build",
-    "build-ts": "npm run tslint && tsc -b",
-    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "build-ts": "npm run lint && tsc -b",
+    "lint": "eslint -c ./.eslintrc.js --ext .ts lib test",
     "publish": "node ./publish.js",
     "test": "jest testDist/test.js"
   },
@@ -37,6 +37,9 @@
     "@types/pug": "^2.0.4",
     "@types/supertest": "^2.0.8",
     "@types/validator": "^10.11.2",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "eslint": "^6.1.0",
     "gulp": "^4.0.2",
     "gulp-nodemon": "^2.4.2",
     "gulp-typescript": "^5.0.1",
@@ -50,7 +53,6 @@
     "sequelize": "^5.10.3",
     "sqlite3": "^4.0.9",
     "supertest": "^4.0.2",
-    "tslint": "^5.17.0",
     "typescript": "^3.5.3"
   },
   "husky": {
