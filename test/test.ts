@@ -59,7 +59,7 @@ test('test PUT /persons/1', async () => {
     });
 });
 
-test('test DESTROY /persons/1', async () => {
+test('test DESTORY /persons/1', async () => {
   const newName = 'new guy';
   await agent.delete('/persons/1')
     .set('Accept', 'application/json')
