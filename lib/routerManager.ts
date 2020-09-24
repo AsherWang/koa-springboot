@@ -82,14 +82,15 @@ function paramsMiddleWare(actionParams: Array<ParamConfig>, responseType: string
     }
     const ret = await next();
     ctx.status = responseStatus;
-    if (responseType === 'json') {
-      ctx.set('Content-Type', 'application/json');
-      ctx.body = JSON.stringify(ret);
-    } else {
-      // render with template
-      await ctx.render(viewPath, ret);
+    if(responseStatus === HttpStatus.OK){
+      if (responseType === 'json') {
+        ctx.set('Content-Type', 'application/json');
+        ctx.body = JSON.stringify(ret);
+      } else {
+        // render with template
+        await ctx.render(viewPath, ret);
+      }
     }
-
   };
 }
 
@@ -117,8 +118,8 @@ class RouterManager {
   }
 
   public setRouteConfig(controller: Function, routeConfig: RouterConfig): void {
-    routeConfig.pattern = prefixSlash(routeConfig.pattern || '');
     const preRouteConfig = this.getRouteConfig(controller, routeConfig.action);
+    routeConfig.pattern = prefixSlash(routeConfig.pattern || preRouteConfig.pattern || '');
     Object.assign(preRouteConfig, routeConfig);
   }
 
