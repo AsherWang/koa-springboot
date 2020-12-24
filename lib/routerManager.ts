@@ -82,7 +82,8 @@ function paramsMiddleWare(actionParams: Array<ParamConfig>, responseType: string
     }
     const ret = await next();
     ctx.status = responseStatus;
-    if(responseStatus === HttpStatus.OK){
+    // 临时打个补丁= =，这里还要看http状态码的约定以及是否要渲染模板的逻辑
+    if(ret && typeof ret === 'object'){
       if (responseType === 'json') {
         ctx.set('Content-Type', 'application/json');
         ctx.body = JSON.stringify(ret);
